@@ -26,6 +26,8 @@
         "quotes": "off",
         "arrow-parens": "off",
         "no-unused-vars": "warn",
-        "max-len": "warn"
+        "max-len": "warn",
+        "operator-linebreak": "off",
+        "no-debugger": "off"
     }
 }
