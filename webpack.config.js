@@ -34,22 +34,27 @@ module.exports = {
     entry: ['@babel/polyfill', './index.js'],
     output: {
         filename: filename('js'),
-        path: path.resolve(__dirname, 'dist'),
-        publicPath: '/',
+        path: path.join(__dirname, 'dist'),
     },
-    resolve: {
-        extensions: ['.js'],
-        alias: {
-            '@': path.resolve(__dirname, 'src'),
-            '@core': path.resolve(__dirname, 'src/core'),
-        }
-    },
+    // resolve: {
+    //     extensions: ['.js'],
+    //     alias: {
+    //         '@': path.resolve(__dirname, 'src'),
+    //         '@core': path.resolve(__dirname, 'src/core'),
+    //     }
+    // },
     // devtool: isDev ? 'source-map' : false,
+    devtool: false,
     devServer: {
         port: 3000,
         hot: isDev,
+        open: true,
         inline: true,
-        contentBase: path.resolve(__dirname, 'dist'),
+        watchOptions: {
+            ignored: /node_modules/
+        },
+        contentBase: __dirname,
+        watchContentBase: true,
         writeToDisk: true,
     },
     target: 'web',

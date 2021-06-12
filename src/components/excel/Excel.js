@@ -22,7 +22,7 @@ export class Excel
 
     render()
     {
+        // this.$el.insertAdjacentHTML('afterbegin', '22222');
         this.$el.append(this.getRoot());
-        this.$el.insertAdjacentHTML('afterbegin', 'test11');
     }
 }
