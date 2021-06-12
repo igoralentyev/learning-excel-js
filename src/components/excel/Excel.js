@@ -9,12 +9,22 @@ export class Excel
 
     getRoot()
     {
+        // Create main excel div - root element
         const $root = document.createElement('div');
-        $root.classList = 'excel';
+        $root.classList.add('excel');
+        
+        // eslint-disable-next-line max-len
+        // Create base html structure for transferred components (header, toolbar, formula, table);
         this.components.forEach(Component => {
-            const component = new Component();
-           
-            $root.insertAdjacentHTML('beforeend', component.toHTML())
+            // create div container for each component
+            const $el = document.createElement('div');
+            $el.classList.add(Component.className);
+            
+            const component = new Component($el);
+
+            // Get base html structure for each component and nesting into root
+            $el.innerHTML = component.toHTML();
+            $root.append($el);
         });
 
         return $root;
@@ -22,7 +32,6 @@ export class Excel
 
     render()
     {
-        // this.$el.insertAdjacentHTML('afterbegin', '22222');
         this.$el.append(this.getRoot());
     }
 }

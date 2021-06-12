@@ -6,6 +6,7 @@ export class Formula extends ExcelComponent
 
     toHTML()
     {
-        return '<h1>Formula</h1>';
+        return `<div class="info">fx</div>
+        <div class="input" contenteditable spellcheck="false"></div>`;
     }
 }
