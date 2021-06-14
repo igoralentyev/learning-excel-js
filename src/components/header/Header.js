@@ -1,6 +1,6 @@
-import {ExcelComponent} from '../../core/ExcelComponent.js';
+import {BaseComponent} from '../../core/BaseComponent.js';
 
-export class Header extends ExcelComponent
+export class Header extends BaseComponent
 {
     static className = 'excel__header';
     

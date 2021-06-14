@@ -1,8 +1,16 @@
-import {ExcelComponent} from '../../core/ExcelComponent.js';
+import {BaseComponent} from '../../core/BaseComponent.js';
 
-export class Toolbar extends ExcelComponent
+export class Toolbar extends BaseComponent
 {
     static className = 'excel__toolbar';
+
+    constructor($root)
+    {
+        super($root, {
+            name: 'toolbar',
+            listeners: ['click']
+        })
+    }
 
     toHTML()
     {
@@ -25,5 +33,10 @@ export class Toolbar extends ExcelComponent
                 <div class="button">
                     <i class="material-icons">format_align_right</i>
                 </div>`;
+    }
+
+    onClick(event)
+    {
+        console.log(event.target);
     }
 }

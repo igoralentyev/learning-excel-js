@@ -16,7 +16,7 @@ export class Excel
         
         // eslint-disable-next-line max-len
         // Create base html structure for transferred components (header, toolbar, formula, table);
-        this.components.forEach(Component => {
+        this.components = this.components.map(Component => {
             // create div container for each component
             const $el = $.create('div', Component.className);
 
@@ -25,6 +25,7 @@ export class Excel
             // Get base html structure for each component and nesting into root
             $el.html(component.toHTML());
             $root.append($el);
+            return component;
         });
 
         return $root;
@@ -33,5 +34,6 @@ export class Excel
     render()
     {
         this.$el.append(this.getRoot());
+        this.components.forEach(component => component.init())
     }
 }
