@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const CHAR_CODES = {
     A: 65,
     Z: 90
@@ -39,7 +40,7 @@ function createRow(content = '', iterator = '')
 {
     return `
         <div class="row">
-            <div class="iterator">${iterator}</div>
+            <div class="iterator">${iterator}${iterator ? '<div class="row-resizer"></div>' : ''}</div>
             <div class="row-data">${content}</div>
         </div>
     `
@@ -50,7 +51,7 @@ function createCell(el)
     if (el !== '')
     {
         return `
-            <div class="column column-head">${el}</div>
+            <div class="column column-head">${el}<div class="col-resizer"></div></div>
         `;
     }
     return `
