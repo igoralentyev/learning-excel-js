@@ -18,10 +18,32 @@ class Dom
         return this.$el.outerHTML.trim();
     }
 
+    parent(selector)
+    {
+        return $(this.$el.closest(selector));
+    }
+
+    getCoordinates()
+    {
+        return this.$el.getBoundingClientRect();
+    }
+
+    css(styles = {})
+    {
+        Object.keys(styles).forEach(key => {
+            this.$el.style[key] = styles[key];
+        })
+    }
+
     clear()
     {
         this.html('');
         return this;
+    }
+
+    get data()
+    {
+        return this.$el.dataset;
     }
 
     append(node)
@@ -53,6 +75,7 @@ class Dom
 }
 export function $(selector)
 {
+    /** @type {HTMLElement} */
     return new Dom(selector);
 }
 

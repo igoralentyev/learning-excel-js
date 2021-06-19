@@ -39,22 +39,22 @@ function getCharByIndex(_, index)
 function createRow(content = '', iterator = '')
 {
     return `
-        <div class="row">
-            <div class="iterator">${iterator}${iterator ? '<div class="row-resizer"></div>' : ''}</div>
+        <div data-resizable="true" class="row">
+            <div class="iterator">${iterator}${iterator ? '<div data-resize="row" class="row-resizer"></div>' : ''}</div>
             <div class="row-data">${content}</div>
         </div>
     `
 }
 
-function createCell(el)
+function createCell(el, index)
 {
     if (el !== '')
     {
         return `
-            <div class="column column-head">${el}<div class="col-resizer"></div></div>
+            <div data-resizable="true" data-resize-index="${index}" class="column column-head">${el}<div data-resize="col" class="col-resizer"></div></div>
         `;
     }
     return `
-        <div contenteditable class="column"></div>
+        <div data-resize-index="${index}" contenteditable class="column"></div>
     `;
 }

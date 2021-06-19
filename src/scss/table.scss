@@ -14,7 +14,7 @@
     .row {
         display: flex;
         flex-direction: row;
-        min-height: 20px;
+        min-height: $row-height;
         height: $row-height;
     }
     .iterator {

@@ -21,11 +21,10 @@ export class Formula extends BaseComponent
     onInput(event)
     {
         console.log('formula oninput', event.target.textContent);
-        console.log(this.$root);
     }
 
     onClick(event)
     {
-        console.log('not realized');
+        console.log('not realized ' + this.name);
     }
 }
