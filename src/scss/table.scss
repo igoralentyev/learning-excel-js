@@ -75,6 +75,11 @@
                 cursor: col-resize;
             }
         }
+        &.selected {
+            outline: none;
+            border: 2px solid #3c74ff;
+            z-index: 2;
+        }
     }
     .cell {
         min-width: 40px;

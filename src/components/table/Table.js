@@ -3,6 +3,7 @@
 import {BaseComponent} from '../../core/BaseComponent.js';
 import {createTable} from './table.template.js';
 import {$} from '../../core/Dom.js'
+import {TableSelection} from './selection/TableSelection.js';
 
 export class Table extends BaseComponent
 {
@@ -21,11 +22,17 @@ export class Table extends BaseComponent
         return createTable();
     }
 
+    init() 
+    {
+        super.init();
+        const $firstCell = this.$root.find('[data-id="1:0"]')
+        this.selection = new TableSelection;
+        this.selection.select($firstCell)
+    }
+
+    // Resize handler
     onMousedown(e)
     {
-        // console.log(e.target.getAttribute('data-resize'));
-
-        
         if (e.target.dataset.resize)
         {
             const resizerType = e.target.dataset.resize;

@@ -15,17 +15,19 @@ export function createTable(rowsCount = 35, colsCount = CHAR_CODES.Z - CHAR_CODE
         .map(getCharByIndex)
         .map(createCell)
         .join('');
-    
-    const bodyColumns = new Array(colsCount)
-        .fill('')
-        .map(createCell)
-        .join('');
     // table head
     rows.push(createRow(headColumns))
+
     // table body
-    for (let i = 1; i <= rowsCount; i++) 
+    for (let row = 1; row <= rowsCount; row++) 
     {
-        rows.push(createRow(bodyColumns, i));        
+        const bodyColumns = new Array(colsCount)
+            .fill('')
+            .map(function(el, index) {
+                return createCell(el, index, row)
+            })
+            .join('');
+        rows.push(createRow(bodyColumns, row));        
     }
 
     return rows.join('');
@@ -46,15 +48,15 @@ function createRow(content = '', iterator = '')
     `
 }
 
-function createCell(el, index)
+function createCell(el, colIndex, row)
 {
     if (el !== '')
     {
         return `
-            <div data-resizable="true" data-resize-index="${index}" class="column column-head">${el}<div data-resize="col" class="col-resizer"></div></div>
+            <div data-resizable="true" data-resize-index="${colIndex}" class="column column-head">${el}<div data-resize="col" class="col-resizer"></div></div>
         `;
     }
     return `
-        <div data-resize-index="${index}" contenteditable class="column"></div>
+        <div data-resize-index="${colIndex}" data-id="${row}:${colIndex}" contenteditable class="column"></div>
     `;
 }
