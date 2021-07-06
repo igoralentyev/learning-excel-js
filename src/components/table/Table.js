@@ -4,6 +4,7 @@ import {BaseComponent} from '../../core/BaseComponent.js';
 import {createTable} from './table.template.js';
 import {$} from '../../core/Dom.js'
 import {TableSelection} from './selection/TableSelection.js';
+import {TableHelpers} from './helpers/TableHelpers.js';
 
 export class Table extends BaseComponent
 {
@@ -22,17 +23,21 @@ export class Table extends BaseComponent
         return createTable();
     }
 
+    prepare()
+    {
+        this.selection = new TableSelection;
+    }
+
     init() 
     {
         super.init();
         const $firstCell = this.$root.find('[data-id="1:0"]')
-        this.selection = new TableSelection;
         this.selection.select($firstCell)
     }
 
-    // Resize handler
     onMousedown(e)
     {
+        // Resize handler
         if (e.target.dataset.resize)
         {
             const resizerType = e.target.dataset.resize;
@@ -87,6 +92,26 @@ export class Table extends BaseComponent
                     $resizer.$el.style.width = null;
                     $resizer.$el.style.left = null;
                 }
+            }
+        }
+        // Select cell handler
+        if (e.target.dataset.tableType == 'cell')
+        {
+            const $target = $(e.target)
+            if (e.shiftKey == true)
+            {
+                const currentPosition = this.selection.current.getCellId(true)
+                const targetPosition = $target.getCellId(true)
+
+                const $cells = TableHelpers.getCellMatrix(currentPosition, targetPosition)
+                    .map((id) => this.$root.find(`[data-id="${id}"]`))
+                
+                this.selection.selectGroup($cells)
+            }
+            else
+            {
+                const needClearSelection = e.ctrlKey ? false : true
+                this.selection.select($target, needClearSelection);
             }
         }
     }

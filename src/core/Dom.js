@@ -87,6 +87,19 @@ class Dom
     {
         this.$el.classList.remove(className)
     }
+
+    getCellId(parse = false)
+    {
+        if (parse)
+        {
+            const id = this.data.id
+            return {
+                'row': id.split(':')[0],
+                'col': id.split(':')[1],
+            }
+        }
+        return this.data.id
+    }
 }
 export function $(selector)
 {

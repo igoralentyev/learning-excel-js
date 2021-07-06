@@ -57,6 +57,6 @@ function createCell(el, colIndex, row)
         `;
     }
     return `
-        <div data-resize-index="${colIndex}" data-id="${row}:${colIndex}" contenteditable class="column"></div>
+        <div data-resize-index="${colIndex}" data-table-type="cell" data-id="${row}:${colIndex}" contenteditable class="column"></div>
     `;
 }
