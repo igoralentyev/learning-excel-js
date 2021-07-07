@@ -1,14 +1,18 @@
 export class TableHelpers 
 {
-    // TODO: баг когда строки в обратном порядке. С столбцами всё ок
     static getRange(start, end)
     {
-        if (start > end)
+        // Без приведения типов условие криво работало
+        if (Number(start) > Number(end))
         {
             // Хак для переворота через деструктуризацию
-            [end, start] = [start, end]
+            [start, end] = [end, start]
+            // то же самое без выебонов
+            // let temp = start
+            // start = end
+            // end = temp
         }
-        return new Array(end - start +1)
+        return new Array(Number(end) - Number(start) +1)
             .fill('')
             .map((_, index) => +start + index)
     }

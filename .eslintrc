@@ -29,6 +29,7 @@
         "max-len": "off",
         "operator-linebreak": "off",
         "no-debugger": "off",
-        "prefer-rest-params": "off"
+        "prefer-rest-params": "off",
+        "prefer-const": "warn"
     }
 }
