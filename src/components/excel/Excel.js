@@ -1,4 +1,5 @@
-import {$} from '../../core/Dom';
+import {$} from '../../core/Dom.js';
+import {EventEmitter} from '../../core/Emitter.js';
 
 export class Excel 
 {
@@ -7,6 +8,7 @@ export class Excel
         /** @type {HTMLElement} */
         this.$el = $(selector);
         this.components = options.components || [];
+        this.emmiter = new EventEmitter()
     }
 
     getRoot()
@@ -14,13 +16,18 @@ export class Excel
         // Create main excel div - root element
         const $root = $.create('div', 'excel');
         
+        // Send emmitter to all childs
+        const componentOptions = {
+            emitter: this.emmiter
+        }
+
         // eslint-disable-next-line max-len
         // Create base html structure for transferred components (header, toolbar, formula, table);
         this.components = this.components.map(Component => {
             // create div container for each component
             const $el = $.create('div', Component.className);
 
-            const component = new Component($el);
+            const component = new Component($el, componentOptions);
 
             // Get base html structure for each component and nesting into root
             $el.html(component.toHTML());
@@ -35,5 +42,10 @@ export class Excel
     {
         this.$el.append(this.getRoot());
         this.components.forEach(component => component.init())
+    }
+
+    destroy()
+    {
+        this.components.forEach(component => component.destroy())
     }
 }

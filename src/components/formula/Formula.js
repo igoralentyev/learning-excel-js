@@ -1,30 +1,49 @@
 import {BaseComponent} from '../../core/BaseComponent.js';
-
+import {$} from '../../core/Dom.js'
 export class Formula extends BaseComponent
 {
     static className = 'excel__formula';
 
-    constructor($root)
+    constructor($root, options)
     {
         super($root, {
             name: 'formula',
-            listeners: ['input', 'click']
+            listeners: ['input', 'keydown'],
+            ...options
         });
+    }
+
+    init()
+    {
+        super.init()
+
+        this.formula = this.$root.find('#formulaInput') 
+
+        this.$subscribe('table:selection', (cell) => {
+            this.formula.text(cell.text())
+        })
+        this.$subscribe('table:onInput', (cell) => {
+            this.formula.text(cell.text())
+        })
     }
 
     toHTML()
     {
         return `<div class="info">fx</div>
-        <div class="input" contenteditable spellcheck="false"></div>`;
+        <div class="input" id='formulaInput' contenteditable spellcheck="false"></div>`;
     }
 
     onInput(event)
     {
-        console.log('formula oninput', event.target.textContent);
+        this.$emit('formula:onInput', $(event.target).text())
     }
 
-    onClick(event)
+    onKeydown(e)
     {
-        console.log('not realized ' + this.name);
+        if (e.key == 'Enter' || e.key == 'Tab')
+        {
+            e.preventDefault()
+            this.$emit('formula:onEnter')
+        }
     }
 }

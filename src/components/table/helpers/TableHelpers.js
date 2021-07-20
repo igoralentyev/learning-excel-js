@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 export class TableHelpers 
 {
     static getRange(start, end)
@@ -29,5 +30,37 @@ export class TableHelpers
             return acc
         }, [])
         return ids
+    }
+
+    static nextSelector(key, {row, col})
+    {
+        switch (key)
+        {
+            case 'Tab':
+                col++
+                break
+            case 'Enter':
+                row++
+                break
+            case 'ArrowDown':
+                row++
+                break
+            case 'ArrowUp':
+                if (row > 1)
+                {
+                    row--
+                }
+                break
+            case 'ArrowLeft':
+                if (col > 0)
+                {
+                    col--
+                }
+                break
+            case 'ArrowRight':
+                col++
+                break
+        }        
+        return `[data-id="${row}:${col}"]`
     }
 }

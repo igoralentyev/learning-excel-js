@@ -3,6 +3,14 @@ import {BaseComponent} from '../../core/BaseComponent.js';
 export class Header extends BaseComponent
 {
     static className = 'excel__header';
+
+    constructor($root, options)
+    {
+        super($root, {
+            name: 'header',
+            ...options
+        });
+    }
     
     toHTML()
     {

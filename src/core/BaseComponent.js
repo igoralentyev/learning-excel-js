@@ -6,7 +6,8 @@ export class BaseComponent extends DomListener
     {
         super($root, options.listeners);
         this.name = options.name;
-
+        this.emitter = options.emitter
+        this.unsubs = []
         this.prepare()
     }
 
@@ -15,9 +16,22 @@ export class BaseComponent extends DomListener
         return '';
     }
 
+    // executes before init
     prepare()
     {
         
+    }
+
+    // Notifies listeners about event 
+    $emit(event, ...args)
+    {
+        this.emitter.emit(event, ...args)
+    }
+
+    $subscribe(event, fn)
+    {
+        const unsub = this.emitter.subscribe(event, fn)
+        this.unsubs.push(unsub)
     }
 
     init()
@@ -28,5 +42,6 @@ export class BaseComponent extends DomListener
     destroy()
     {
         this.removeDOMListeners();
+        this.unsubs.forEach(unsub => unsub())
     }
 }

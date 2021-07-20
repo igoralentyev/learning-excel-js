@@ -10,12 +10,14 @@ export class Table extends BaseComponent
 {
     static className = 'excel__table';
 
-    constructor($root)
+    constructor($root, options)
     {
         super($root, {
             name: 'Table',
-            listeners: ['mousedown']  
+            listeners: ['mousedown', 'keydown', 'input'],
+            ...options
         })
+        this.unsubs = []
     }
 
     toHTML()
@@ -32,7 +34,21 @@ export class Table extends BaseComponent
     {
         super.init();
         const $firstCell = this.$root.find('[data-id="1:0"]')
-        this.selection.select($firstCell)
+        this.selectCell($firstCell)
+
+        this.$subscribe('formula:onInput', text => {
+            this.selection.current.text(text)
+        })
+
+        this.$subscribe('formula:onEnter', () => {
+            this.selection.current.focus()
+        })
+    }
+
+    selectCell($cell)
+    {
+        this.selection.select($cell)
+        this.$emit('table:selection', $cell)
     }
 
     onMousedown(e)
@@ -114,5 +130,25 @@ export class Table extends BaseComponent
                 this.selection.select($target, needClearSelection);
             }
         }
+    }
+
+    onKeydown(e)
+    {
+        // Arrows and some keys controls for table
+        const eventsTypes = ['Tab', 'Enter', 'ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight']
+        if (eventsTypes.includes(e.key) && !e.shiftKey)
+        {
+            e.preventDefault()
+            const id = this.selection.current.getCellId(true)
+            const $next = this.$root.find(TableHelpers.nextSelector(e.key, id))
+            this.selection.select($next, e.ctrlKey ? false : true)
+
+            this.$emit('table:selection', $next)
+        }
+    }
+
+    onInput(e)
+    {
+        this.$emit('table:onInput', $(e.target))
     }
 }

@@ -16,7 +16,7 @@ export class TableSelection
         }
 
         this.group.push($el)
-        $el.addClass('selected')
+        $el.focus().addClass('selected')
         this.current = $el
     }
 
