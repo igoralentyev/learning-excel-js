@@ -5,6 +5,7 @@ import {createTable} from './table.template.js';
 import {$} from '../../core/Dom.js'
 import {TableSelection} from './selection/TableSelection.js';
 import {TableHelpers} from './helpers/TableHelpers.js';
+import {tableResize} from './resize/TableResize.js';
 
 export class Table extends BaseComponent
 {
@@ -43,12 +44,26 @@ export class Table extends BaseComponent
         this.$subscribe('formula:onEnter', () => {
             this.selection.current.focus()
         })
+
+        this.$storeSubscribe(state => {
+            console.log('table state: ', state);
+        })
     }
 
-    selectCell($cell)
+    selectCell($cell, needClear = false)
     {
-        this.selection.select($cell)
+        this.selection.select($cell, needClear)
         this.$emit('table:selection', $cell)
+        this.$storeDispatch({type: 'TEST'})
+    }
+
+    async resizeHandler(e) {
+        try {
+            const cellData = await tableResize(this.$root, e)
+            this.$storeDispatch({type: 'TABLE_RESIZE', data: cellData})
+        } catch (error) {
+            console.warn('resize error', error.message)
+        }
     }
 
     onMousedown(e)
@@ -56,59 +71,7 @@ export class Table extends BaseComponent
         // Resize handler
         if (e.target.dataset.resize)
         {
-            const resizerType = e.target.dataset.resize;
-            const $resizer = $(e.target);
-            const $parent = $resizer.parent('[data-resizable="true"]');
-            const coords = $parent.getCoordinates();
-            const resizeIndex = $parent.data.resizeIndex;
-            const rowCollection = this.$root.$el.querySelectorAll(`[data-resize-index="${resizeIndex}"]`);
-            let colWidth
-            let delta;
-            
-            $resizer.$el.style.opacity = 1;
-
-            document.onmousemove = (event) => {
-                if (resizerType == 'col')
-                {
-                    const delta = Math.floor(event.clientX - coords.right);
-                    colWidth = (coords.width + delta);
-
-                    $resizer.$el.style.zIndex = '1000';
-                    $resizer.$el.style.right = -delta + 'px';
-                    $resizer.$el.style.bottom = '-1000px';
-                }
-                else if (resizerType == 'row')
-                {
-                    delta = Math.floor(event.clientY - coords.bottom);
-                    
-                    $resizer.$el.style.zIndex = '1000';
-                    $resizer.$el.style.bottom = -delta + 'px';
-                    $resizer.$el.style.width = 2000 + 'px';
-                    $resizer.$el.style.left = 0 + 'px';
-                }
-            }
-
-            document.onmouseup = () => {
-                document.onmousemove = null;
-                document.onmouseup = null;
-
-                if (resizerType == 'col')
-                {
-                    $parent.$el.style.width = colWidth + 'px';
-                    rowCollection.forEach(column => column.style.width = colWidth + 'px')
-
-                    $resizer.$el.style.opacity = null;
-                    $resizer.$el.style.right = null;
-                }
-                else if (resizerType == 'row')
-                {
-                    $parent.$el.style.height = (coords.height + delta) + 'px';
-                    
-                    $resizer.$el.style.bottom = null;
-                    $resizer.$el.style.width = null;
-                    $resizer.$el.style.left = null;
-                }
-            }
+            this.resizeHandler(e)
         }
         // Select cell handler
         if (e.target.dataset.tableType == 'cell')
@@ -127,7 +90,7 @@ export class Table extends BaseComponent
             else
             {
                 const needClearSelection = e.ctrlKey ? false : true
-                this.selection.select($target, needClearSelection);
+                this.selectCell($target, needClearSelection)
             }
         }
     }
@@ -141,9 +104,7 @@ export class Table extends BaseComponent
             e.preventDefault()
             const id = this.selection.current.getCellId(true)
             const $next = this.$root.find(TableHelpers.nextSelector(e.key, id))
-            this.selection.select($next, e.ctrlKey ? false : true)
-
-            this.$emit('table:selection', $next)
+            this.selectCell($next, e.ctrlKey ? false : true)
         }
     }
 

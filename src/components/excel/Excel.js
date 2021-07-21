@@ -9,6 +9,7 @@ export class Excel
         this.$el = $(selector);
         this.components = options.components || [];
         this.emmiter = new EventEmitter()
+        this.store = options.store
     }
 
     getRoot()
@@ -18,7 +19,8 @@ export class Excel
         
         // Send emmitter to all childs
         const componentOptions = {
-            emitter: this.emmiter
+            emitter: this.emmiter,
+            store: this.store
         }
 
         // eslint-disable-next-line max-len

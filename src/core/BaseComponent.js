@@ -7,7 +7,9 @@ export class BaseComponent extends DomListener
         super($root, options.listeners);
         this.name = options.name;
         this.emitter = options.emitter
+        this.store = options.store
         this.unsubs = []
+        this.storeSubscribers = null
         this.prepare()
     }
 
@@ -34,6 +36,14 @@ export class BaseComponent extends DomListener
         this.unsubs.push(unsub)
     }
 
+    // store methods
+    $storeDispatch(action) {
+        this.store.dispatch(action)
+    }
+    $storeSubscribe(fn) {
+        this.storeSubscribers = this.store.subscribe(fn)
+    }
+
     init()
     {
         this.initDOMListeners();
@@ -43,5 +53,6 @@ export class BaseComponent extends DomListener
     {
         this.removeDOMListeners();
         this.unsubs.forEach(unsub => unsub())
+        this.storeSubscribers.unsubscribe()
     }
 }
